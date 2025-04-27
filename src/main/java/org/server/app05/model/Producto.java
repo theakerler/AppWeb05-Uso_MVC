@@ -1,4 +1,4 @@
-package org.example.app06.model;
+package org.server.app05.model;
 
 public class Producto {
     private int id;
