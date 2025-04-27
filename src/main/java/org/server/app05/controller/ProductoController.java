@@ -34,10 +34,29 @@ public class ProductoController extends HttpServlet {
             throws ServletException, IOException {
         // Agregar producto
         String nombre = request.getParameter("nombre");
-        double precio = Double.parseDouble(request.getParameter("precio"));
+        String precioTexto = request.getParameter("precio");
+
+        if (nombre == null || nombre.trim().isEmpty() ||
+                precioTexto == null || precioTexto.trim().isEmpty()) {
+
+            // Si faltan datos, podrías regresar un error o un mensaje
+            request.setAttribute("error", "Nombre y precio son obligatorios.");
+            request.getRequestDispatcher("productos.jsp").forward(request, response);
+            return;
+        }
+
+        double precio;
+        try {
+            precio = Double.parseDouble(precioTexto.trim());
+        } catch (NumberFormatException e) {
+            // Si el precio no es un número válido
+            request.setAttribute("error", "El precio debe ser un número válido.");
+            request.getRequestDispatcher("productos.jsp").forward(request, response);
+            return;
+        }
 
         Producto producto = new Producto();
-        producto.setNombre(nombre);
+        producto.setNombre(nombre.trim());
         producto.setPrecio(precio);
 
         productoDAO.agregar(producto);
